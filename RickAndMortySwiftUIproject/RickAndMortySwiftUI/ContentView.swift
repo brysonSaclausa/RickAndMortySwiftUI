@@ -11,19 +11,22 @@ import SwiftUI
 struct ContentView: View {
 
     var body: some View {
-        
-        TabView {
-            Tab1()
-                .tabItem {
-                    Text("Character")
-                    Image(systemName: "person.circle.fill")
-                }
-            Tab2()
-                .tabItem {
-                    Text("Locations")
-                    Image(systemName: "map.fill")
-                }
+        NavigationView {
+            TabView {
+                Tab1()
+                    .tabItem {
+                        Text("Character")
+                        Image(systemName: "person.circle.fill")
+                    }
+                Tab2()
+                    .tabItem {
+                        Text("Locations")
+                        Image(systemName: "map.fill")
+                    }
+            }
+            .navigationBarTitle("R&M SwiftUI")
         }
+        
     }
 }//
 
@@ -31,7 +34,7 @@ struct Tab1: View {
     private let url = "https://rickandmortyapi.com/api/character"
     @State private var characters = [Character]()
     
-    func fetchData() {
+    func fetchCharacterData() {
         guard let url = URL(string: url) else {
             print("url not valid")
             return
@@ -56,25 +59,46 @@ struct Tab1: View {
     }//
     
     var body: some View {
+        NavigationView {
+            List (characters, id: \.name) { (item) in
+                NavigationLink(
+                    destination: CharacterDetailView(),
+                    label: {
+                        characterCell(characterSelected: item)
+                    })
+            }.onAppear(perform: {
+                fetchCharacterData()
+            })
+            .navigationBarTitle("Characters")
+        }
         
-        List(characters, id: \.name) { (item) in
-            HStack(alignment: .center) {
-                Image(systemName: "").data(url: URL(string: "\(item.image)")!)
-                    .frame(width: 90, height: 90, alignment: .center)
-                    .clipShape(Circle())
-                Text(item.name)
-            }
-        }.onAppear(perform: {
-            fetchData()
-        })
+        
     }//
+}
+
+struct characterCell: View {
+    var characterSelected: Character
+    
+    var body: some View {
+        HStack(alignment: .center) {
+            Image(systemName: "").data(url: URL(string: "\(characterSelected.image)")!)
+                .frame(width: 60, height: 60, alignment: .leading)
+                .clipShape(Circle())
+            Text(characterSelected.name)
+        }
+   
     }
+    
+    
+}
+
 
 struct Tab2: View {
     var body: some View {
         Text("Locations")
     }
 }
+
 
 
 struct ContentView_Previews: PreviewProvider {
