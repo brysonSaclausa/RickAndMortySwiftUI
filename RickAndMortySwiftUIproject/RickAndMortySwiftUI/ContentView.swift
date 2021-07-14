@@ -7,9 +7,28 @@
 
 import SwiftUI
 
+
 struct ContentView: View {
+
+    var body: some View {
+        
+        TabView {
+            Tab1()
+                .tabItem {
+                    Text("Character")
+                    Image(systemName: "person.circle.fill")
+                }
+            Tab2()
+                .tabItem {
+                    Text("Locations")
+                    Image(systemName: "map.fill")
+                }
+        }
+    }
+}//
+
+struct Tab1: View {
     private let url = "https://rickandmortyapi.com/api/character"
-    
     @State private var characters = [Character]()
     
     func fetchData() {
@@ -49,7 +68,14 @@ struct ContentView: View {
             fetchData()
         })
     }//
+    }
+
+struct Tab2: View {
+    var body: some View {
+        Text("Locations")
+    }
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
